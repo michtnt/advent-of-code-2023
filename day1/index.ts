@@ -1,6 +1,3 @@
-import { readFileSync } from "fs";
-import * as path from "path";
-
 const decodingTextToNumber = (value = "0") => {
   const dictionary: Record<string, string> = {
     one: "1",
@@ -21,7 +18,6 @@ const getJoinedDigitsFromLine = (line: string): string => {
   const regex = /(?:[0-9]|one|two|three|four|five|six|seven|eight|nine)/g;
 
   // https://stackoverflow.com/questions/20833295/how-can-i-match-overlapping-strings-with-regex
-
   let next;
   let digits = [];
 
@@ -38,8 +34,8 @@ const getJoinedDigitsFromLine = (line: string): string => {
   return firstAndLastDigits?.join("");
 };
 
-const getSumOfAllCalibrationValues = () => {
-  const data: Array<string> = parseCalbirationDocumentValue();
+const getSumOfAllCalibrationValues = async () => {
+  const data = await parseCalbirationDocumentValue();
   let total = 0;
 
   data.map((line) => {
@@ -51,10 +47,14 @@ const getSumOfAllCalibrationValues = () => {
 };
 
 /** utils */
-const parseCalbirationDocumentValue = () => {
-  return readFileSync(path.join(__dirname, "./input.txt"))
-    .toString()
-    .split("\n");
+const parseCalbirationDocumentValue = async () => {
+  const file = Bun.file("./input.txt");
+  const text = await file.text();
+
+  return text.split("\n");
 };
 
-console.log("sum of all calibration values", getSumOfAllCalibrationValues());
+console.log(
+  "sum of all calibration values",
+  await getSumOfAllCalibrationValues()
+);
