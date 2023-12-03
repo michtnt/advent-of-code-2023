@@ -54,7 +54,12 @@ const parseCalbirationDocumentValue = async () => {
   return text.split("\n");
 };
 
+const start = Date.now();
+
 console.log(
   "sum of all calibration values",
   await getSumOfAllCalibrationValues()
 );
+
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);
