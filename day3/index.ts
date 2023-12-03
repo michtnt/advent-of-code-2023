@@ -17,206 +17,52 @@ const getAdjacentNumbers = (nestedArr: string[], index: number) => {
     forwardIndex++;
   }
 
-  return {
-    nestedArr,
-    currentNumber,
-  };
+  return currentNumber;
 };
 
 const getSumOfAdjacentSymbolNumbers = async () => {
   const data = await parseEngineSchematicData();
-  let total = 0;
+  let totalSumOfAdjacent = 0;
+  let totalSumOfGearRatio = 0;
 
   for (let i = 0; i < data.length; i++) {
     for (let j = 0; j < data[i].length; j++) {
-      // only for symbols
-      if (!data[i][j].match(NUMBER_REGEX) && data[i][j] !== ".") {
-        // adjacent logic
-        // row before
-        if (data[i - 1][j - 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i - 1],
-            j - 1
-          );
-          data[i - 1] = nestedArr;
-          total += parseInt(currentNumber);
-        }
+      let totalGearRatio = 1;
+      let totalAdjacentGear = 0;
+      const currentPosition = data[i][j];
 
-        if (data[i - 1][j].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i - 1],
-            j
-          );
-          data[i - 1] = nestedArr;
-          total += parseInt(currentNumber);
-        }
+      const possiblePositions = [
+        [i - 1, j - 1],
+        [i - 1, j],
+        [i - 1, j + 1],
+        [i, j - 1],
+        [i, j + 1],
+        [i + 1, j - 1],
+        [i + 1, j],
+        [i + 1, j + 1],
+      ];
 
-        if (data[i - 1][j + 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i - 1],
-            j + 1
-          );
-          data[i - 1] = nestedArr;
-          total += parseInt(currentNumber);
-        }
+      if (!currentPosition.match(NUMBER_REGEX) && currentPosition !== ".") {
+        possiblePositions.map((position) => {
+          if (data[position[0]][position[1]].match(NUMBER_REGEX)) {
+            const currentNumber = getAdjacentNumbers(
+              data[position[0]],
+              position[1]
+            );
+            totalSumOfAdjacent += parseInt(currentNumber);
+            totalGearRatio *= parseInt(currentNumber);
+            totalAdjacentGear++;
+          }
+        });
 
-        // current row
-        if (data[i][j - 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i],
-            j - 1
-          );
-          data[i] = nestedArr;
-          total += parseInt(currentNumber);
-        }
-
-        if (data[i][j + 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i],
-            j + 1
-          );
-          data[i] = nestedArr;
-          total += parseInt(currentNumber);
-        }
-
-        // row after
-        if (data[i + 1][j - 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i + 1],
-            j - 1
-          );
-          data[i + 1] = nestedArr;
-          total += parseInt(currentNumber);
-        }
-
-        if (data[i + 1][j].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i + 1],
-            j
-          );
-          data[i + 1] = nestedArr;
-          total += parseInt(currentNumber);
-        }
-
-        if (data[i + 1][j + 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i + 1],
-            j + 1
-          );
-          data[i + 1] = nestedArr;
-          total += parseInt(currentNumber);
+        if (totalAdjacentGear >= 2) {
+          totalSumOfGearRatio += totalGearRatio;
         }
       }
     }
   }
 
-  return total;
-};
-
-const getGearRatio = async () => {
-  const data = await parseEngineSchematicData();
-  let total = 0;
-
-  for (let i = 0; i < data.length; i++) {
-    for (let j = 0; j < data[i].length; j++) {
-      let totalAdjacent = 0;
-      let currentCalc = 1;
-
-      // only for symbols
-      if (!data[i][j].match(NUMBER_REGEX) && data[i][j] === "*") {
-        // adjacent logic
-        // row before
-
-        if (data[i - 1][j - 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i - 1],
-            j - 1
-          );
-          data[i - 1] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        if (data[i - 1][j].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i - 1],
-            j
-          );
-          data[i - 1] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        if (data[i - 1][j + 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i - 1],
-            j + 1
-          );
-          data[i - 1] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        // current row
-        if (data[i][j - 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i],
-            j - 1
-          );
-          data[i] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        if (data[i][j + 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i],
-            j + 1
-          );
-          data[i] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        // row after
-        if (data[i + 1][j - 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i + 1],
-            j - 1
-          );
-          data[i + 1] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        if (data[i + 1][j].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i + 1],
-            j
-          );
-          data[i + 1] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        if (data[i + 1][j + 1].match(NUMBER_REGEX)) {
-          const { currentNumber, nestedArr } = getAdjacentNumbers(
-            data[i + 1],
-            j + 1
-          );
-          data[i + 1] = nestedArr;
-          currentCalc *= parseInt(currentNumber);
-          totalAdjacent++;
-        }
-
-        if (totalAdjacent >= 2) {
-          total += currentCalc;
-        }
-      }
-    }
-  }
-
-  return total;
+  return { totalSumOfAdjacent, totalSumOfGearRatio };
 };
 
 /** utils */
@@ -238,11 +84,13 @@ const parseEngineSchematicData = async () => {
   return schematicMatrixArr;
 };
 
+const { totalSumOfAdjacent, totalSumOfGearRatio } =
+  await getSumOfAdjacentSymbolNumbers();
 console.log(
   "Part 1: sum of any adjacent numbers of symbol",
-  await getSumOfAdjacentSymbolNumbers()
+  totalSumOfAdjacent
 );
 console.log(
-  "Part 1: sum of two adjacent numbers multiplied of gears (*)",
-  await getGearRatio()
+  "Part 2: sum of two adjacent numbers multiplied of gears (*)",
+  totalSumOfGearRatio
 );
