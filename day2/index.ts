@@ -6,12 +6,20 @@ const POSSIBLE_GAME_CUBES = {
 
 const CUBE_COMBO_REGEX = /(\d+)(red|green|blue)/;
 
-const getSumOfPossibleGameIndex = async () => {
+const getGameOfCubesValue = async () => {
   const data = await parseGameData();
-  let total = 0;
+
+  let sumOfPossibleGameIndex = 0; // part 1
+  let sumOfMinMultiplyOfCubes = 0; // part 2
 
   data.map((game) => {
-    const isImpossible = game.cubesCombination.some((cubesCombo: string) => {
+    let isImpossible = false;
+
+    let minRed = -1,
+      minGreen = -1,
+      minBlue = -1;
+
+    game.cubesCombination.map((cubesCombo: string) => {
       let totalRed = 0,
         totalGreen = 0,
         totalBlue = 0;
@@ -20,13 +28,29 @@ const getSumOfPossibleGameIndex = async () => {
 
       separatedCubes.map((cubeValue) => {
         const regexResult = cubeValue.match(CUBE_COMBO_REGEX);
+
         if (regexResult) {
-          if (regexResult[2] === "red") {
-            totalRed += parseInt(regexResult[1]);
-          } else if (regexResult[2] === "green") {
-            totalGreen += parseInt(regexResult[1]);
-          } else if (regexResult[2] === "blue") {
-            totalBlue += parseInt(regexResult[1]);
+          const singleCubeNumber = parseInt(regexResult[1]);
+          const singleCubeColor = regexResult[2];
+
+          if (singleCubeColor === "red") {
+            totalRed += singleCubeNumber;
+
+            if (singleCubeNumber > minRed) {
+              minRed = singleCubeNumber;
+            }
+          } else if (singleCubeColor === "green") {
+            totalGreen += singleCubeNumber;
+
+            if (singleCubeNumber > minGreen) {
+              minGreen = singleCubeNumber;
+            }
+          } else if (singleCubeColor === "blue") {
+            totalBlue += singleCubeNumber;
+
+            if (singleCubeNumber > minBlue) {
+              minBlue = singleCubeNumber;
+            }
           }
         }
       });
@@ -36,49 +60,16 @@ const getSumOfPossibleGameIndex = async () => {
         totalGreen > POSSIBLE_GAME_CUBES.green ||
         totalBlue > POSSIBLE_GAME_CUBES.blue
       ) {
-        return true;
+        isImpossible = true;
       }
     });
 
-    if (!isImpossible) total += game.gameIndex;
+    if (!isImpossible) sumOfPossibleGameIndex += game.gameIndex;
+
+    sumOfMinMultiplyOfCubes += minRed * minGreen * minBlue;
   });
 
-  return total;
-};
-
-const getMinMultiplyOfCubes = async () => {
-  const data = await parseGameData();
-  let total = 0;
-
-  data.map((game) => {
-    let minRed = -Infinity,
-      minGreen = -Infinity,
-      minBlue = -Infinity;
-
-    game.cubesCombination.map((value: string) => {
-      const separatedCubes = value.split(",");
-
-      separatedCubes.map((cubeValue) => {
-        const regexResult = cubeValue.match(CUBE_COMBO_REGEX);
-
-        if (regexResult) {
-          const singleCubeValue = parseInt(regexResult[1]);
-
-          if (regexResult[2] === "red" && singleCubeValue > minRed) {
-            minRed = parseInt(regexResult[1]);
-          } else if (regexResult[2] === "green" && singleCubeValue > minGreen) {
-            minGreen = parseInt(regexResult[1]);
-          } else if (regexResult[2] === "blue" && singleCubeValue > minBlue) {
-            minBlue = parseInt(regexResult[1]);
-          }
-        }
-      });
-    });
-
-    total += minRed * minGreen * minBlue;
-  });
-
-  return total;
+  return { sumOfPossibleGameIndex, sumOfMinMultiplyOfCubes };
 };
 
 /** utils */
@@ -101,11 +92,13 @@ const parseGameData = async () => {
   return gameArr;
 };
 
-console.log(
-  "Part 1: sum of possible game index",
-  await getSumOfPossibleGameIndex()
-);
-console.log(
-  "Part 2: sum of minimum multiplied cubes",
-  await getMinMultiplyOfCubes()
-);
+const start = Date.now();
+
+const { sumOfPossibleGameIndex, sumOfMinMultiplyOfCubes } =
+  await getGameOfCubesValue();
+
+console.log("Part 1: sum of possible game index", sumOfPossibleGameIndex);
+console.log("Part 2: sum of minimum multiplied cubes", sumOfMinMultiplyOfCubes);
+
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);
