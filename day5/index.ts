@@ -54,4 +54,7 @@ const parseAlmanacData = async () => {
   return almanacMappings;
 };
 
-console.log(await getLowestLocationNumber());
+console.log(
+  "Part 1: Get lowest location number",
+  await getLowestLocationNumber()
+);
