@@ -70,8 +70,13 @@ const parseScratchCardsData = async () => {
   return scratchCardsData;
 };
 
+const start = Date.now();
+
 console.log("Part 1: get sum of winning points", await getWinningPoints());
 console.log(
   "Part 2: get sum of winning points incl. copied scratch cards",
   await getCopiedScratchCardPoints()
 );
+
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);

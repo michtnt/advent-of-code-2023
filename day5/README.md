@@ -1,5 +1,3 @@
-## Problem
-
 --- Day 5: If You Give A Seed A Fertilizer ---
 
 You take the boat and find the gardener right where you were told he would be: managing a giant "garden" that looks more to you like a farm.
@@ -98,8 +96,6 @@ What is the lowest location number that corresponds to any of the initial seed n
 
 Your puzzle answer was 173706076.
 
-The first half of this puzzle is complete! It provides one gold star: \*
-
 --- Part Two ---
 
 Everyone will starve if you only plant such a small number of seeds. Re-reading the almanac, it looks like the seeds: line actually describes ranges of seed numbers.
@@ -115,8 +111,12 @@ In the above example, the lowest location number can be obtained from seed numbe
 
 Consider all of the initial seed numbers listed in the ranges on the first line of the almanac. What is the lowest location number that corresponds to any of the initial seed numbers?
 
-Answer:
+Your puzzle answer was 11611182.
 
-Although it hasn't changed, you can still get your puzzle input.
+Both parts of this puzzle are complete! They provide two gold stars: \*\*
+
+At this point, you should return to your Advent calendar and try another puzzle.
+
+If you still want to see it, you can get your puzzle input.
 
 You can also [Share] this puzzle.

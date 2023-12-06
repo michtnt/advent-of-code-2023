@@ -54,7 +54,12 @@ const parseAlmanacData = async () => {
   return almanacMappings;
 };
 
+const start = Date.now();
+
 console.log(
   "Part 1: Get lowest location number",
   await getLowestLocationNumber()
 );
+
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);
