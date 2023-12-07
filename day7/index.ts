@@ -8,37 +8,8 @@ const CARDS_COMBO = [
   [1, 1, 1, 1, 1], // high card
 ];
 
-const CAMEL_CARDS_STRENGTH_ORDER = {
-  A: 0,
-  K: 1,
-  Q: 2,
-  J: 3,
-  T: 4,
-  9: 5,
-  8: 6,
-  7: 7,
-  6: 8,
-  5: 9,
-  4: 10,
-  3: 11,
-  2: 12,
-};
-
-const CAMEL_CARDS_WITH_JOKER_STRENGTH_ORDER = {
-  A: 0,
-  K: 1,
-  Q: 2,
-  T: 3,
-  9: 4,
-  8: 5,
-  7: 6,
-  6: 7,
-  5: 8,
-  4: 9,
-  3: 10,
-  2: 11,
-  J: 12,
-};
+const CAMEL_CARDS_STRENGTH_ORDER = "AKQJT98765432";
+const CAMEL_CARDS_WITH_JOKER_STRENGTH_ORDER = "AKQT98765432J";
 
 const getTotalWinnings = async (includeJoker: boolean = false) => {
   const data = await parseCamelCardsData();
@@ -46,7 +17,7 @@ const getTotalWinnings = async (includeJoker: boolean = false) => {
   let totalWinnings = 0;
 
   // strongest -> weakest
-  const strengthOrder: Record<string, number> = includeJoker
+  const strengthOrder: string = includeJoker
     ? CAMEL_CARDS_WITH_JOKER_STRENGTH_ORDER
     : CAMEL_CARDS_STRENGTH_ORDER;
 
@@ -112,18 +83,23 @@ const getTotalWinnings = async (includeJoker: boolean = false) => {
     if (winningCardCategory.length > 0) {
       winningCardCategory.sort((a, b) => {
         for (let j = 0; j < a.length; j++) {
-          if (a[j] !== b[j]) {
-            // If characters in the common prefix are different, use custom order
-            return strengthOrder[a[j]] - strengthOrder[b[j]];
+          const indexA = strengthOrder.indexOf(a[j]);
+          const indexB = strengthOrder.indexOf(b[j]);
+
+          const indexDiff = indexA - indexB;
+          if (indexDiff !== 0) {
+            // If characters are different, use custom order
+            return indexDiff;
           }
         }
+        return 0; // If all characters are the same, no need to change the order
+      });
+
+      winningCardCategory.forEach((winningCard) => {
+        totalWinnings += rankLength * cardToBet[winningCard];
+        rankLength--;
       });
     }
-
-    winningCardCategory.forEach((winningCard) => {
-      totalWinnings += rankLength * cardToBet[winningCard];
-      rankLength--;
-    });
   });
 
   return totalWinnings;
