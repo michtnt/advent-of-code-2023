@@ -8,8 +8,6 @@ const CARDS_COMBO = [
   [1, 1, 1, 1, 1], // high card
 ];
 
-const HAND_LENGTH = 5;
-
 const CAMEL_CARDS_STRENGTH_ORDER = {
   A: 0,
   K: 1,
@@ -62,7 +60,7 @@ const getTotalWinnings = async (includeJoker: boolean = false) => {
 
     cardToBet[cardCombo] = parseInt(cardBet);
 
-    for (let j = 0; j < HAND_LENGTH; j++) {
+    for (let j = 0; j < cardCombo.length; j++) {
       if (!includeJoker || cardCombo[j] !== "J") {
         cardComboCharMap[cardCombo[j]] =
           (cardComboCharMap[cardCombo[j]] || 0) + 1;
@@ -113,7 +111,7 @@ const getTotalWinnings = async (includeJoker: boolean = false) => {
   winningCardsComboMap.forEach((winningCardCategory) => {
     if (winningCardCategory.length > 0) {
       winningCardCategory.sort((a, b) => {
-        for (let j = 0; j < HAND_LENGTH; j++) {
+        for (let j = 0; j < a.length; j++) {
           if (a[j] !== b[j]) {
             // If characters in the common prefix are different, use custom order
             return strengthOrder[a[j]] - strengthOrder[b[j]];
