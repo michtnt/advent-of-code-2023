@@ -95,8 +95,13 @@ const parseNetworkData = async () => {
   };
 };
 
+const start = Date.now();
+
 console.log("Part 1: steps required from AAA -> ZZZ", await getSteps());
 console.log(
   "Part 2: parallel steps required from **A -> **Z",
   await getParallelSteps()
 );
+
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);
