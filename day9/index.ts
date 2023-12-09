@@ -6,7 +6,7 @@ const getSumOfExtrapolatedValues = async (type = "forward") => {
     const currentHistoryLine = data[i];
     const historyLineMap: number[][] = [data[i]];
 
-    interpolate(currentHistoryLine, historyLineMap);
+    extrapolate(currentHistoryLine, historyLineMap);
 
     const sum =
       type === "forward"
@@ -26,7 +26,7 @@ const getSumOfExtrapolatedValues = async (type = "forward") => {
   return total;
 };
 
-const interpolate = (
+const extrapolate = (
   currentHistoryLine: number[],
   historyLineMap: number[][],
   i = 1
@@ -43,7 +43,7 @@ const interpolate = (
     return;
   } else {
     i++;
-    interpolate(historyLineMap[i - 1], historyLineMap, i);
+    extrapolate(historyLineMap[i - 1], historyLineMap, i);
   }
 };
 
