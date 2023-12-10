@@ -1,5 +1,3 @@
-import assert from "assert";
-
 type Point = [number, number];
 
 const getLoopMaxSteps = async () => {
@@ -24,8 +22,6 @@ export function traverse(
       ],
       current
     );
-
-    assert(!!n);
 
     const newStartingPointPosition: Point = [
       startingPointPosition[0] + n![0],
