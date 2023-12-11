@@ -129,4 +129,9 @@ const parseMazeData = async () => {
   return { grid, startingPointPosition };
 };
 
-console.log(await getLoopMaxSteps());
+const start = Date.now();
+
+console.log("Part 1: get farthest step in a loop", await getLoopMaxSteps());
+
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);
