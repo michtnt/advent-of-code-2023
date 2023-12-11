@@ -10,69 +10,13 @@ const getShortestPathForGalaxyPair = async () => {
       const currentHash = hashIndices[i];
       const compareHash = hashIndices[j];
 
-      const shortestPathLength = findShortestPath(
-        data,
-        currentHash,
-        compareHash
-      );
-      total += shortestPathLength;
+      total +=
+        Math.abs(currentHash[1] - compareHash[1]) +
+        Math.abs(currentHash[0] - compareHash[0]);
     }
   }
 
   return total;
-};
-
-const findShortestPath = (matrix: Galaxy, start: number[], end: number[]) => {
-  const rows = matrix.length;
-  const cols = matrix[0].length;
-
-  // Create a visited matrix to keep track of visited cells
-  const visited = new Array(rows)
-    .fill(false)
-    .map(() => new Array(cols).fill(false));
-
-  // Define possible moves (up, down, left, right)
-  const moves = [
-    [-1, 0],
-    [1, 0],
-    [0, -1],
-    [0, 1],
-  ];
-
-  // Queue for BFS
-  const queue = [{ row: start[0], col: start[1], distance: 0 }];
-
-  while (queue.length > 0) {
-    const { row, col, distance } = queue.shift();
-
-    // Check if the current cell is the destination
-    if (row === end[0] && col === end[1]) {
-      return distance;
-    }
-
-    // Mark the current cell as visited
-    visited[row][col] = true;
-
-    // Explore all possible moves
-    for (const [dx, dy] of moves) {
-      const newRow = row + dx;
-      const newCol = col + dy;
-
-      // Check if the new position is within bounds and has not been visited
-      if (
-        newRow >= 0 &&
-        newRow < rows &&
-        newCol >= 0 &&
-        newCol < cols &&
-        !visited[newRow][newCol]
-      ) {
-        queue.push({ row: newRow, col: newCol, distance: distance + 1 });
-        visited[newRow][newCol] = true;
-      }
-    }
-  }
-
-  return -1; // no path found
 };
 
 const findHashIndices = (matrix: Galaxy) => {
