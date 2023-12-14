@@ -126,7 +126,7 @@ const start = Date.now();
 const { sumOfReflection, sumOfSmudgedReflection } = await getReflections();
 
 console.log("Part 1: get sum of reflections", sumOfReflection);
-console.log("Part 1: get sum of smudged reflections", sumOfSmudgedReflection);
+console.log("Part 2: get sum of smudged reflections", sumOfSmudgedReflection);
 
 const end = Date.now();
 console.log(`Execution time: ${end - start} ms`);
