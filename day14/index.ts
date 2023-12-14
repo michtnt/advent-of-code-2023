@@ -53,7 +53,12 @@ const parseReflectorDishData = async () => {
   return lines;
 };
 
+const start = Date.now();
+
 console.log(
   "Part 1: total load of north support beam",
   await getSumOfNorthBeamLoad()
 );
+
+const end = Date.now();
+console.log(`Execution time: ${end - start} ms`);
